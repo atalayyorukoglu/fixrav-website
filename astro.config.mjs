@@ -5,6 +5,11 @@ import sitemap from "@astrojs/sitemap";
 import keystatic from "@keystatic/astro";
 import cloudflare from "@astrojs/cloudflare";
 
+// `defineConfig((opts) => ...)` kullanma — Astro export'u nesne bekler; fonksiyon verilirse adapter/ssr kaybolur.
+// `react-dom/server.edge` CJS `require` içerir; sadece production bundle'da (Cloudflare Worker) alias uygula.
+const useReactDomServerEdge =
+  process.argv.includes("build") || process.argv.includes("preview");
+
 export default defineConfig({
   site: "https://fixrav.com",
   output: "server",
@@ -32,10 +37,11 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       alias: {
-        // Cloudflare Workers: "worker" export react-dom/server.browser'a gider (MessageChannel yok).
-        // Edge/workerd sürümü Workers ile uyumludur.
-        "react-dom/server": "react-dom/server.edge",
-        // Cloudflare Workers ortamında Node.js crypto modülü
+        ...(useReactDomServerEdge
+          ? {
+              "react-dom/server": "react-dom/server.edge",
+            }
+          : {}),
         "node:crypto": "crypto",
       },
     },
