@@ -1,13 +1,56 @@
 diff --git a/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js b/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js
-index 2246207..fd5c9b4 100644
+index 2246207..827491f 100644
 --- a/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js
 +++ b/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js
-@@ -237,6 +237,8 @@ async function githubOauthCallback(req, config) {
-   url.searchParams.set('client_id', config.clientId);
-   url.searchParams.set('client_secret', config.clientSecret);
-   url.searchParams.set('code', code);
-+  // GitHub: authorize'da redirect_uri kullanıldıysa token isteğinde de aynı URI gerekir (aksi halde 401 / JSON error).
-+  url.searchParams.set('redirect_uri', `${new URL(req.url, 'http://localhost').origin}/api/keystatic/github/oauth/callback`);
-   const tokenRes = await fetch(url, {
+@@ -233,30 +233,42 @@ async function githubOauthCallback(req, config) {
+   const cookies = cookie.parse((_req$headers$get2 = req.headers.get('cookie')) !== null && _req$headers$get2 !== void 0 ? _req$headers$get2 : '');
+   const fromCookie = state ? cookies['ks-' + state] : undefined;
+   const from = typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie) ? fromCookie : undefined;
+-  const url = new URL('https://github.com/login/oauth/access_token');
+-  url.searchParams.set('client_id', config.clientId);
+-  url.searchParams.set('client_secret', config.clientSecret);
+-  url.searchParams.set('code', code);
+-  const tokenRes = await fetch(url, {
++  const reqOrigin = new URL(req.url, 'https://example.com').origin;
++  const redirect_uri = `${reqOrigin}/api/keystatic/github/oauth/callback`;
++  const tokenBody = new URLSearchParams({
++    client_id: config.clientId,
++    client_secret: config.clientSecret,
++    code: code,
++    redirect_uri: redirect_uri
++  });
++  const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
      method: 'POST',
      headers: {
+-      Accept: 'application/json'
+-    }
++      Accept: 'application/json',
++      'Content-Type': 'application/x-www-form-urlencoded'
++    },
++    body: tokenBody.toString()
+   });
+   if (!tokenRes.ok) {
+     return {
+       status: 401,
+-      body: 'Authorization failed'
++      body: 'Authorization failed (token HTTP ' + tokenRes.status + ')'
+     };
+   }
+   const _tokenData = await tokenRes.json();
++  if (_tokenData && typeof _tokenData.error === 'string') {
++    return {
++      status: 401,
++      body: 'GitHub OAuth: ' + _tokenData.error + (typeof _tokenData.error_description === 'string' ? ' — ' + _tokenData.error_description : '')
++    };
++  }
+   let tokenData;
+   try {
+     tokenData = tokenDataResultType.create(_tokenData);
+   } catch {
+     return {
+       status: 401,
+-      body: 'Authorization failed'
++      body: 'Authorization failed (invalid token payload)'
+     };
+   }
+   const headers = await getTokenCookies(tokenData, config);
