@@ -1,0 +1,80 @@
+---
+import { t }    from "@/i18n/utils";
+import { hero } from "@/i18n/hero";
+import type { Locale }   from "@/i18n/utils";
+import type { HeroPage } from "@/i18n/hero";
+
+interface Props {
+  locale: Locale;
+  page:   HeroPage;
+}
+
+const { locale, page } = Astro.props;
+const content  = hero[page];
+const isHome   = page === "home";
+
+const contactHref  = locale === "tr" ? "/tr/iletisim"  : "/contact";
+const servicesHref = locale === "tr" ? "/tr/hizmetler" : "/services";
+
+// \n → <br> için başlığı böl
+const titleLines = t(content.title, locale).split("\n");
+---
+
+{isHome ? (
+  <section class="relative overflow-hidden py-24 md:py-32 lg:py-40">
+    <!-- Arka plan efekti -->
+    <div
+      class="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background"
+      aria-hidden="true"
+    />
+
+    <div class="container mx-auto px-4 text-center max-w-4xl">
+      <!-- Badge -->
+      {content.badge && (
+        <span class="inline-block text-xs font-medium text-primary border border-primary/30 bg-primary/5 rounded-full px-4 py-1.5 mb-8">
+          {t(content.badge, locale)}
+        </span>
+      )}
+
+      <!-- Başlık -->
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight mb-6">
+        {titleLines.map((line, i) => (
+          <span>
+            {line}
+            {i < titleLines.length - 1 && <br />}
+          </span>
+        ))}
+      </h1>
+
+      <!-- Alt başlık -->
+      <p class="text-lg md:text-xl text-foreground/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+        {t(content.subtitle, locale)}
+      </p>
+
+      <!-- CTA butonları -->
+      {content.ctaPrimary && (
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a href={contactHref} class="btn btn--primary text-base px-8 py-3">
+            {t(content.ctaPrimary, locale)}
+          </a>
+          {content.ctaSecondary && (
+            <a href={servicesHref} class="btn btn--outline text-base px-8 py-3">
+              {t(content.ctaSecondary, locale)}
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+) : (
+  <section class="border-b border-border py-16 md:py-20 bg-muted/20">
+    <div class="container mx-auto px-4 text-center max-w-3xl">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        {t(content.title, locale)}
+      </h1>
+      <p class="text-lg text-foreground/60 leading-relaxed">
+        {t(content.subtitle, locale)}
+      </p>
+    </div>
+  </section>
+)}

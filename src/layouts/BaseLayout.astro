@@ -1,0 +1,61 @@
+---
+import "@fontsource-variable/inter";
+import "../styles/globals.css";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import OrganizationSchema from "@/components/layout/OrganizationSchema.astro";
+import { site } from "@/config/site";
+import { getLangFromUrl } from "@/i18n/utils";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image = "/og/default.jpg" } = Astro.props;
+const locale = getLangFromUrl(Astro.url);
+const canonical = new URL(Astro.url.pathname, site.url).toString();
+const ogImage = new URL(image, site.url).toString();
+
+const hrefEn = new URL(
+  Astro.url.pathname.replace(/^\/tr/, "") || "/",
+  site.url
+).toString();
+const hrefTr = new URL(
+  "/tr" + (Astro.url.pathname.replace(/^\/tr/, "") || "/"),
+  site.url
+).toString();
+---
+
+<!doctype html>
+<html lang={locale} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | {site.name}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} | ${site.name}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="en" href={hrefEn} />
+    <link rel="alternate" hreflang="tr" href={hrefTr} />
+    <link rel="alternate" hreflang="x-default" href={hrefEn} />
+
+    <OrganizationSchema />
+  </head>
+  <body class="bg-background text-foreground font-sans antialiased">
+    <Header locale={locale} />
+    <main>
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

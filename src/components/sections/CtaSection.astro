@@ -1,0 +1,28 @@
+---
+import CtaForm from "@/components/ui/CtaForm";
+import { t } from "@/i18n/utils";
+import { cta } from "@/i18n/cta";
+import type { Locale } from "@/i18n/utils";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<section id="contact" class="py-20 md:py-28 bg-muted/20">
+  <div class="container mx-auto px-4">
+    <div class="max-w-xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+          {t(cta.heading, locale)}
+        </h2>
+        <p class="text-foreground/60">
+          {t(cta.subheading, locale)}
+        </p>
+      </div>
+
+      <CtaForm locale={locale} client:load />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,18 @@
+---
+import BaseLayout          from "@/layouts/BaseLayout.astro";
+import HeroSection         from "@/components/sections/HeroSection.astro";
+import TestimonialsSection from "@/components/sections/TestimonialsSection.astro";
+import CtaSection          from "@/components/sections/CtaSection.astro";
+import { getLangFromUrl }  from "@/i18n/utils";
+
+const locale      = getLangFromUrl(Astro.url);
+const title       = locale === "tr" ? "Müşteri Yorumları"                          : "Client Testimonials";
+const description = locale === "tr" ? "Müşterilerimizin FixRav hakkındaki görüşleri."
+                                    : "What our clients say about working with FixRav.";
+---
+
+<BaseLayout {title} {description}>
+  <HeroSection         locale={locale} page="testimonials" />
+  <TestimonialsSection locale={locale}                     />
+  <CtaSection          locale={locale}                     />
+</BaseLayout>

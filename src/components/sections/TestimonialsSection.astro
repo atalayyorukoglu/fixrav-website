@@ -1,0 +1,51 @@
+---
+import { testimonials } from "@/config/testimonials";
+import { t } from "@/i18n/utils";
+import { testimonialsSection } from "@/i18n/testimonials";
+import type { Locale } from "@/i18n/utils";
+
+interface Props {
+  locale: Locale;
+  featured?: boolean;
+}
+
+const { locale, featured = false } = Astro.props;
+
+const displayed = featured
+  ? testimonials.filter((item) => item.featured)
+  : [...testimonials];
+---
+
+<section class="py-20 md:py-28 bg-muted/20">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+        {t(testimonialsSection.heading, locale)}
+      </h2>
+      <p class="text-lg text-foreground/60">
+        {t(testimonialsSection.subheading, locale)}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      {displayed.map((item) => (
+        <figure class="card card--elevated flex flex-col gap-4">
+          <div class="flex gap-0.5" aria-label={t(testimonialsSection.stars, locale)}>
+            {Array.from({ length: item.rating }).map(() => (
+              <span class="text-primary text-lg leading-none">★</span>
+            ))}
+          </div>
+
+          <blockquote class="text-sm text-foreground/80 leading-relaxed flex-1">
+            "{locale === "tr" ? item.quoteTr : item.quoteEn}"
+          </blockquote>
+
+          <figcaption class="flex flex-col gap-0.5 pt-2 border-t border-border">
+            <span class="text-sm font-semibold">{item.name}</span>
+            <span class="text-xs text-foreground/50">{item.location}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

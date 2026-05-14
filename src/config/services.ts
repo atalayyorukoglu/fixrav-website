@@ -1,0 +1,38 @@
+export const services = [
+  {
+    id:            "web-design",
+    titleEn:       "Web Design",
+    titleTr:       "Web Tasarımı",
+    descriptionEn: "Modern, fast, and conversion-focused websites tailored to your business.",
+    descriptionTr: "İşletmenize özel modern, hızlı ve dönüşüm odaklı web siteleri.",
+    icon:          "monitor",
+    featured:      true,
+  },
+  {
+    id:            "astro-development",
+    titleEn:       "Astro Development",
+    titleTr:       "Astro Geliştirme",
+    descriptionEn: "Blazing-fast static sites built with Astro, Tailwind CSS, and Keystatic CMS.",
+    descriptionTr: "Astro, Tailwind CSS ve Keystatic CMS ile ultra hızlı statik siteler.",
+    icon:          "code",
+    featured:      true,
+  },
+  {
+    id:            "cms-setup",
+    titleEn:       "CMS Integration",
+    titleTr:       "CMS Entegrasyonu",
+    descriptionEn: "Keystatic CMS integration so your client can update content without a developer.",
+    descriptionTr: "Müşterinizin geliştirici olmadan içerik düzenleyebileceği Keystatic entegrasyonu.",
+    icon:          "edit",
+    featured:      true,
+  },
+  {
+    id:            "seo",
+    titleEn:       "SEO & Performance",
+    titleTr:       "SEO ve Performans",
+    descriptionEn: "Technical SEO, schema markup, and Lighthouse 95+ scores out of the box.",
+    descriptionTr: "Teknik SEO, schema markup ve kutudan çıkar çıkmaz Lighthouse 95+ skorlar.",
+    icon:          "search",
+    featured:      false,
+  },
+] as const;

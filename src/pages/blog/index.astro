@@ -1,0 +1,73 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroSection from "@/components/sections/HeroSection.astro";
+import CtaSection from "@/components/sections/CtaSection.astro";
+import { getCollection } from "astro:content";
+import { getLangFromUrl, t } from "@/i18n/utils";
+import { blogSection } from "@/i18n/blog";
+
+const locale = getLangFromUrl(Astro.url);
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime()
+);
+
+const title = locale === "tr" ? "Blog" : "Blog";
+const description =
+  locale === "tr"
+    ? "Web geliştirme ve tasarım üzerine içgörüler."
+    : "Insights on web development and design.";
+
+const slugBase = locale === "tr" ? "/tr/blog/" : "/blog/";
+---
+
+<BaseLayout {title} {description}>
+  <HeroSection locale={locale} page="blog" />
+
+  <section class="py-20">
+    <div class="container mx-auto px-4 max-w-4xl">
+      {posts.length === 0 ? (
+        <p class="text-center text-foreground/50 py-20">
+          {t(blogSection.noPosts, locale)}
+        </p>
+      ) : (
+        <div class="divide-y divide-border">
+          {posts.map((post) => {
+            const postTitle =
+              locale === "tr" && post.data.titleTr ? post.data.titleTr : post.data.titleEn;
+            const postExcerpt =
+              locale === "tr" && post.data.excerptTr ? post.data.excerptTr : post.data.excerpt;
+            const dateStr = post.data.publishedAt.toLocaleDateString(
+              locale === "tr" ? "tr-TR" : "en-GB",
+              { year: "numeric", month: "long", day: "numeric" }
+            );
+            return (
+              <article class="py-8 group">
+                <div class="flex flex-col gap-3">
+                  <p class="text-xs text-foreground/40 uppercase tracking-widest">
+                    {t(blogSection.publishedOn, locale)} · {dateStr}
+                  </p>
+                  <h2 class="text-xl font-bold group-hover:text-primary transition-colors">
+                    <a href={`${slugBase}${post.slug}`}>{postTitle}</a>
+                  </h2>
+                  {postExcerpt && (
+                    <p class="text-sm text-foreground/60 leading-relaxed max-w-2xl">
+                      {postExcerpt}
+                    </p>
+                  )}
+                  <a
+                    href={`${slugBase}${post.slug}`}
+                    class="text-sm font-medium text-primary hover:underline w-fit"
+                  >
+                    {t(blogSection.readMore, locale)}
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <CtaSection locale={locale} />
+</BaseLayout>

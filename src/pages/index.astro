@@ -1,17 +1,28 @@
 ---
+import BaseLayout             from "@/layouts/BaseLayout.astro";
+import HeroSection            from "@/components/sections/HeroSection.astro";
+import StatsSection           from "@/components/sections/StatsSection.astro";
+import ServicesSection        from "@/components/sections/ServicesSection.astro";
+import TestimonialsSection    from "@/components/sections/TestimonialsSection.astro";
+import HowItWorksSection      from "@/components/sections/HowItWorksSection.astro";
+import PricingSection         from "@/components/sections/PricingSection.astro";
+import TrustBadgesSection     from "@/components/sections/TrustBadgesSection.astro";
+import FaqSection             from "@/components/sections/FaqSection.astro";
+import CtaSection             from "@/components/sections/CtaSection.astro";
+import { getLangFromUrl }     from "@/i18n/utils";
+import { seo }                from "@/config/seo";
 
+const locale = getLangFromUrl(Astro.url);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Modern Web Solutions" description={seo.defaultDescription}>
+  <HeroSection          locale={locale} page="home"      />
+  <StatsSection         locale={locale}                  />
+  <ServicesSection      locale={locale} featured={true}  />
+  <TestimonialsSection  locale={locale} featured={true}  />
+  <HowItWorksSection    locale={locale}                  />
+  <PricingSection       locale={locale}                  />
+  <TrustBadgesSection   locale={locale}                  />
+  <FaqSection           locale={locale} maxItems={3}     />
+  <CtaSection           locale={locale}                  />
+</BaseLayout>

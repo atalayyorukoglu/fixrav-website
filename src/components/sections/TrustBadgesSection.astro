@@ -1,0 +1,35 @@
+---
+import type { Locale } from "@/i18n/utils";
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+
+const badges = [
+  { name: "Astro",          label: "Framework"   },
+  { name: "Tailwind CSS",   label: "Styling"     },
+  { name: "Keystatic CMS",  label: "Content"     },
+  { name: "Cloudflare",     label: "Hosting"     },
+  { name: "TypeScript",     label: "Language"    },
+  { name: "shadcn/ui",      label: "Components"  },
+];
+
+const heading = locale === "tr"
+  ? "Kullandığımız Teknolojiler"
+  : "Built with modern technologies";
+---
+
+<section class="py-14">
+  <div class="container mx-auto px-4">
+    <p class="text-center text-xs uppercase tracking-widest text-foreground/40 mb-8">
+      {heading}
+    </p>
+    <div class="flex flex-wrap justify-center gap-3">
+      {badges.map(({ name, label }) => (
+        <div class="card flex flex-col items-center gap-1 px-5 py-3 min-w-[110px]">
+          <span class="text-sm font-medium">{name}</span>
+          <span class="text-xs text-foreground/50">{label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

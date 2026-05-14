@@ -1,0 +1,51 @@
+---
+// SSR modunda getStaticPaths gerekmez — slug Astro.params'tan alınır
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CtaSection from "@/components/sections/CtaSection.astro";
+import { getEntry, render } from "astro:content";
+import { getLangFromUrl, t } from "@/i18n/utils";
+import { blogSection } from "@/i18n/blog";
+
+const { slug } = Astro.params;
+const post = slug ? await getEntry("blog", slug) : undefined;
+
+if (!post) return Astro.redirect("/blog");
+
+const { Content } = await render(post);
+const locale = getLangFromUrl(Astro.url);
+const postTitle =
+  locale === "tr" && post.data.titleTr ? post.data.titleTr : post.data.titleEn;
+const postExcerpt =
+  locale === "tr" && post.data.excerptTr
+    ? post.data.excerptTr
+    : (post.data.excerpt ?? "");
+const blogHref = locale === "tr" ? "/tr/blog" : "/blog";
+const dateStr = post.data.publishedAt.toLocaleDateString(
+  locale === "tr" ? "tr-TR" : "en-GB",
+  { year: "numeric", month: "long", day: "numeric" }
+);
+---
+
+<BaseLayout title={postTitle} description={postExcerpt}>
+  <section class="border-b border-border py-16 md:py-20 bg-muted/20">
+    <div class="container mx-auto px-4 max-w-2xl">
+      <a href={blogHref} class="text-xs text-foreground/50 hover:text-foreground transition-colors mb-6 inline-block">
+        {t(blogSection.backToBlog, locale)}
+      </a>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
+        {postTitle}
+      </h1>
+      <p class="text-sm text-foreground/40 uppercase tracking-widest">
+        {t(blogSection.publishedOn, locale)} · {dateStr}
+      </p>
+    </div>
+  </section>
+
+  <article
+    class="container mx-auto px-4 max-w-2xl py-16 prose prose-sm prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/70 prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-li:text-foreground/70"
+  >
+    <Content />
+  </article>
+
+  <CtaSection locale={locale} />
+</BaseLayout>

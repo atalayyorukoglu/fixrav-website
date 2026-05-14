@@ -1,0 +1,51 @@
+---
+import { nav } from "@/config/nav";
+import { site } from "@/config/site";
+import { contact } from "@/config/contact";
+import { t } from "@/i18n/utils";
+import { common } from "@/i18n/common";
+import type { Locale } from "@/i18n/utils";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const homeHref = locale === "tr" ? "/tr/" : "/";
+---
+
+<header class="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+  <nav class="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+
+    <!-- Logo -->
+    <a href={homeHref} class="flex items-center gap-2 shrink-0">
+      <img src={site.logo} alt={site.logoAlt} class="h-8 w-auto" onerror="this.style.display='none'" />
+      <span class="font-semibold text-lg">{site.name}</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <ul class="hidden md:flex items-center gap-6">
+      {nav.header.map((item) => (
+        <li>
+          <a
+            href={locale === "tr" ? item.hrefTr : item.href}
+            class="text-sm text-foreground/70 hover:text-foreground transition-colors"
+          >
+            {locale === "tr" ? item.labelTr : item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- CTA -->
+    <a
+      href={`https://wa.me/${contact.whatsapp}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn btn--primary text-sm shrink-0"
+    >
+      {t(common.whatsappButton, locale)}
+    </a>
+
+  </nav>
+</header>

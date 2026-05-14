@@ -1,0 +1,39 @@
+---
+// output: "server" modunda getStaticPaths gerekmez —
+// slug Astro.params'tan alınır, config'ten aranır.
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CtaSection from "@/components/sections/CtaSection.astro";
+import { services } from "@/config/services";
+import { getLangFromUrl } from "@/i18n/utils";
+
+const { slug } = Astro.params;
+const service = services.find((s) => s.id === slug);
+
+if (!service) return Astro.redirect("/");
+
+const locale = getLangFromUrl(Astro.url);
+const title = locale === "tr" ? service.titleTr : service.titleEn;
+const description =
+  locale === "tr" ? service.descriptionTr : service.descriptionEn;
+---
+
+<BaseLayout {title} {description}>
+  <section class="border-b border-border py-16 md:py-20 bg-muted/20">
+    <div class="container mx-auto px-4 text-center max-w-3xl">
+      <a
+        href={locale === "tr" ? "/tr/hizmetler" : "/services"}
+        class="text-xs text-foreground/50 hover:text-foreground transition-colors mb-6 inline-block"
+      >
+        ← {locale === "tr" ? "Tüm Hizmetler" : "All Services"}
+      </a>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
+        {title}
+      </h1>
+      <p class="text-lg text-foreground/60 leading-relaxed max-w-xl mx-auto">
+        {description}
+      </p>
+    </div>
+  </section>
+
+  <CtaSection locale={locale} />
+</BaseLayout>

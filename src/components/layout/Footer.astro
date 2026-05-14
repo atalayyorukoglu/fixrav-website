@@ -1,0 +1,75 @@
+---
+import { nav } from "@/config/nav";
+import { site } from "@/config/site";
+import { social } from "@/config/social";
+import { t } from "@/i18n/utils";
+import { common } from "@/i18n/common";
+import type { Locale } from "@/i18n/utils";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const currentYear = new Date().getFullYear();
+const homeHref = locale === "tr" ? "/tr/" : "/";
+
+const socialLinks = Object.entries(social).filter(([, url]) => url !== "");
+---
+
+<footer class="border-t border-border bg-muted/30 mt-20">
+  <div class="container mx-auto px-4 py-12">
+
+    <!-- Üst: Logo + Tagline + Nav -->
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8 mb-10">
+
+      <!-- Marka -->
+      <div class="max-w-xs">
+        <a href={homeHref} class="flex items-center gap-2 mb-3">
+          <img src={site.logo} alt={site.logoAlt} class="h-7 w-auto" onerror="this.style.display='none'" />
+          <span class="font-semibold">{site.name}</span>
+        </a>
+        <p class="text-sm text-foreground/60">{t(common.footerTagline, locale)}</p>
+      </div>
+
+      <!-- Footer Nav -->
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
+        {nav.footer.map((item) => (
+          <li>
+            <a
+              href={locale === "tr" ? item.hrefTr : item.href}
+              class="text-sm text-foreground/60 hover:text-foreground transition-colors"
+            >
+              {locale === "tr" ? item.labelTr : item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+    </div>
+
+    <!-- Alt: Copyright + Sosyal Medya -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-6 border-t border-border">
+
+      <p class="text-xs text-foreground/50">
+        © {currentYear} {site.name}. {t(common.footerCopyright, locale)}
+      </p>
+
+      {socialLinks.length > 0 && (
+        <div class="flex gap-4">
+          {socialLinks.map(([platform, url]) => (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs text-foreground/50 hover:text-foreground transition-colors capitalize"
+            >
+              {platform}
+            </a>
+          ))}
+        </div>
+      )}
+
+    </div>
+  </div>
+</footer>

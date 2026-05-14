@@ -1,0 +1,18 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroSection from "@/components/sections/HeroSection.astro";
+import TeamSection from "@/components/sections/TeamSection.astro";
+import CtaSection  from "@/components/sections/CtaSection.astro";
+import { getLangFromUrl } from "@/i18n/utils";
+
+const locale      = getLangFromUrl(Astro.url);
+const title       = locale === "tr" ? "Ekibimiz"                             : "Our Team";
+const description = locale === "tr" ? "FixRav'ın arkasındaki insanlarla tanışın."
+                                    : "Meet the people behind FixRav.";
+---
+
+<BaseLayout {title} {description}>
+  <HeroSection locale={locale} page="team" />
+  <TeamSection locale={locale}             />
+  <CtaSection  locale={locale}             />
+</BaseLayout>

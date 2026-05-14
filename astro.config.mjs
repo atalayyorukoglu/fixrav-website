@@ -1,5 +1,32 @@
-// @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
+import keystatic from "@keystatic/astro";
+import node from "@astrojs/node";
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  site: "https://fixrav.com",
+  output: "server",
+  adapter: node({ mode: "standalone" }),
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  integrations: [
+    react(),
+    sitemap({
+      i18n: {
+        defaultLocale: "en",
+        locales: { en: "en-GB", tr: "tr-TR" },
+      },
+    }),
+    keystatic(),
+  ],
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "tr"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+});

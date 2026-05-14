@@ -1,0 +1,36 @@
+---
+import { site } from "@/config/site";
+import { contact } from "@/config/contact";
+import { social } from "@/config/social";
+import { sector } from "@/config/sector";
+
+const schemaTypeMap: Record<string, string> = {
+  "dental":           "Dentist",
+  "dental-tourism":   "Dentist",
+  "law":              "LegalService",
+  "beauty":           "BeautySalon",
+  "hotel":            "Hotel",
+  "agency":           "ProfessionalService",
+  "generic":          "LocalBusiness",
+};
+
+const schemaType = schemaTypeMap[sector.type] ?? "LocalBusiness";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": schemaType,
+  "name": site.name,
+  "url": site.url,
+  "logo": `${site.url}${site.logo}`,
+  "telephone": contact.phone,
+  "email": contact.email,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": contact.address.street,
+    "addressLocality": contact.address.city,
+    "addressCountry": contact.address.country,
+  },
+  "sameAs": Object.values(social).filter(Boolean),
+};
+---
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

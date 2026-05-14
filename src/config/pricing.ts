@@ -1,0 +1,32 @@
+export const pricing = [
+  {
+    id:         "starter",
+    nameEn:     "Starter",
+    nameTr:     "Başlangıç",
+    price:      999,
+    currency:   "USD",
+    featured:   false,
+    featuresEn: ["5-page website", "Mobile responsive", "Basic SEO", "Contact form"],
+    featuresTr: ["5 sayfalık site", "Mobil uyumlu", "Temel SEO", "İletişim formu"],
+  },
+  {
+    id:         "professional",
+    nameEn:     "Professional",
+    nameTr:     "Profesyonel",
+    price:      1999,
+    currency:   "USD",
+    featured:   true,
+    featuresEn: ["10-page website", "CMS integration", "Blog", "Advanced SEO", "Analytics"],
+    featuresTr: ["10 sayfalık site", "CMS entegrasyonu", "Blog", "Gelişmiş SEO", "Analitik"],
+  },
+  {
+    id:         "enterprise",
+    nameEn:     "Enterprise",
+    nameTr:     "Kurumsal",
+    price:      3499,
+    currency:   "USD",
+    featured:   false,
+    featuresEn: ["Unlimited pages", "Full CMS", "Multilingual", "Priority support"],
+    featuresTr: ["Sınırsız sayfa", "Tam CMS", "Çok dilli", "Öncelikli destek"],
+  },
+] as const;

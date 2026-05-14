@@ -1,0 +1,77 @@
+---
+import { pricing } from "@/config/pricing";
+import { t } from "@/i18n/utils";
+import { pricingSection } from "@/i18n/pricing";
+import type { Locale } from "@/i18n/utils";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const contactHref = locale === "tr" ? "/tr/iletisim" : "/contact";
+---
+
+<section class="py-20 md:py-28">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+        {t(pricingSection.heading, locale)}
+      </h2>
+      <p class="text-lg text-foreground/60">
+        {t(pricingSection.subheading, locale)}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
+      {pricing.map((plan) => (
+        <div
+          class:list={[
+            "card flex flex-col gap-5 relative",
+            plan.featured
+              ? "border-primary shadow-lg shadow-primary/10 ring-1 ring-primary/30"
+              : "card--elevated",
+          ]}
+        >
+          {plan.featured && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span class="inline-block text-xs font-semibold bg-primary text-white rounded-full px-3 py-1 whitespace-nowrap">
+                {t(pricingSection.mostPopular, locale)}
+              </span>
+            </div>
+          )}
+
+          <div class="pt-2">
+            <h3 class="font-bold text-xl">
+              {locale === "tr" ? plan.nameTr : plan.nameEn}
+            </h3>
+            <p class="text-xs text-foreground/50 mt-0.5">
+              {t(pricingSection.startingFrom, locale)}
+            </p>
+          </div>
+
+          <div class="flex items-end gap-1">
+            <span class="text-4xl font-bold">${plan.price}</span>
+            <span class="text-foreground/50 text-sm mb-1">{plan.currency}</span>
+          </div>
+
+          <ul class="space-y-2 flex-1">
+            {(locale === "tr" ? plan.featuresTr : plan.featuresEn).map((feature) => (
+              <li class="flex items-start gap-2 text-sm">
+                <span class="text-primary mt-0.5 shrink-0">✓</span>
+                <span class="text-foreground/70">{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href={contactHref}
+            class:list={["btn text-sm text-center", plan.featured ? "btn--primary" : "btn--outline"]}
+          >
+            {t(pricingSection.getStarted, locale)}
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

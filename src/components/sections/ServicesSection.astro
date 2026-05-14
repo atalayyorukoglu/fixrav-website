@@ -1,0 +1,64 @@
+---
+import { services } from "@/config/services";
+import { t } from "@/i18n/utils";
+import { servicesSection } from "@/i18n/services";
+import type { Locale } from "@/i18n/utils";
+
+interface Props {
+  locale: Locale;
+  featured?: boolean;
+}
+
+const { locale, featured = false } = Astro.props;
+
+const displayed = featured ? services.filter((s) => s.featured) : [...services];
+
+const iconMap: Record<string, string> = {
+  "web-design": "⬡",
+  "astro-development": "◈",
+  "cms-setup": "⊞",
+  seo: "◎",
+};
+---
+
+<section class="py-20 md:py-28">
+  <div class="container mx-auto px-4">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+        {t(servicesSection.heading, locale)}
+      </h2>
+      <p class="text-lg text-foreground/60">
+        {t(servicesSection.subheading, locale)}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {displayed.map((service) => (
+        <article class="card card--elevated flex flex-col gap-4 hover:border-primary/40 transition-colors duration-200">
+          <div class="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl select-none">
+            {iconMap[service.id] ?? "◇"}
+          </div>
+
+          <h3 class="font-semibold text-lg leading-snug">
+            {locale === "tr" ? service.titleTr : service.titleEn}
+          </h3>
+
+          <p class="text-sm text-foreground/60 leading-relaxed flex-1">
+            {locale === "tr" ? service.descriptionTr : service.descriptionEn}
+          </p>
+        </article>
+      ))}
+    </div>
+
+    {featured && (
+      <div class="text-center mt-12">
+        <a
+          href={locale === "tr" ? "/tr/hizmetler" : "/services"}
+          class="btn btn--outline"
+        >
+          {t(servicesSection.viewAll, locale)}
+        </a>
+      </div>
+    )}
+  </div>
+</section>

@@ -1,0 +1,13 @@
+export const team = [
+  {
+    id:      "atalay",
+    nameEn:  "Atalay Yörükoğlu",
+    nameTr:  "Atalay Yörükoğlu",
+    titleEn: "Founder & Web Developer",
+    titleTr: "Kurucu & Web Geliştirici",
+    bioEn:   "Building fast, beautiful websites for businesses that want to stand out online.",
+    bioTr:   "Online öne çıkmak isteyen işletmeler için hızlı ve güzel web siteleri inşa ediyorum.",
+    photo:   "/team/atalay.jpg",
+    order:   1,
+  },
+] as const;

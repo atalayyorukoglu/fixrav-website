@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getLangFromUrl } from "@/i18n/utils";
+
+const locale = getLangFromUrl(Astro.url);
+const title =
+  locale === "tr" ? "Gizlilik Politikası" : "Privacy Policy";
+const description =
+  locale === "tr" ? "FixRav gizlilik politikası." : "FixRav privacy policy.";
+const updated = "2024-01-01";
+---
+
+<BaseLayout {title} {description}>
+  <div class="container mx-auto px-4 py-20 max-w-2xl">
+    <h1 class="text-3xl font-bold mb-2">{title}</h1>
+    <p class="text-sm text-foreground/50 mb-10">
+      {locale === "tr" ? `Son güncelleme: ${updated}` : `Last updated: ${updated}`}
+    </p>
+
+    <div class="prose prose-sm max-w-none space-y-6 text-foreground/80 leading-relaxed">
+      {locale === "tr" ? (
+        <>
+          <p>FixRav olarak gizliliğinize saygı duyuyoruz. Bu politika, web sitemizi ziyaret ettiğinizde hangi verileri topladığımızı ve bunları nasıl kullandığımızı açıklar.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Toplanan Veriler</h2>
+          <p>İletişim formu aracılığıyla gönderdiğiniz ad, e-posta adresi ve mesaj içeriği toplanır. Bu veriler yalnızca size yanıt vermek amacıyla kullanılır.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Çerezler</h2>
+          <p>Sitemiz temel analitik için çerez kullanabilir. Tarayıcınızdan çerezleri devre dışı bırakabilirsiniz.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Üçüncü Taraflar</h2>
+          <p>Form gönderimleriniz Web3Forms aracılığıyla iletilir. Verileriniz üçüncü taraflara satılmaz veya paylaşılmaz.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">İletişim</h2>
+          <p>Gizlilik ile ilgili sorularınız için hello@fixrav.com adresine yazabilirsiniz.</p>
+        </>
+      ) : (
+        <>
+          <p>At FixRav, we respect your privacy. This policy explains what data we collect when you visit our website and how we use it.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Data We Collect</h2>
+          <p>We collect the name, email address, and message content you submit through the contact form. This data is used solely to respond to your enquiry.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Cookies</h2>
+          <p>Our site may use cookies for basic analytics. You can disable cookies in your browser settings.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Third Parties</h2>
+          <p>Form submissions are processed via Web3Forms. Your data is never sold or shared with third parties.</p>
+          <h2 class="text-lg font-semibold text-foreground mt-8">Contact</h2>
+          <p>For privacy-related questions, email hello@fixrav.com.</p>
+        </>
+      )}
+    </div>
+  </div>
+</BaseLayout>
