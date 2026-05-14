@@ -1,8 +1,8 @@
 diff --git a/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js b/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js
-index 2246207..827491f 100644
+index 2246207..912b20d 100644
 --- a/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js
 +++ b/node_modules/@keystatic/core/dist/keystatic-core-api-generic.worker.js
-@@ -233,30 +233,42 @@ async function githubOauthCallback(req, config) {
+@@ -233,30 +233,59 @@ async function githubOauthCallback(req, config) {
    const cookies = cookie.parse((_req$headers$get2 = req.headers.get('cookie')) !== null && _req$headers$get2 !== void 0 ? _req$headers$get2 : '');
    const fromCookie = state ? cookies['ks-' + state] : undefined;
    const from = typeof fromCookie === 'string' && keystaticRouteRegex.test(fromCookie) ? fromCookie : undefined;
@@ -43,9 +43,27 @@ index 2246207..827491f 100644
 +      body: 'GitHub OAuth: ' + _tokenData.error + (typeof _tokenData.error_description === 'string' ? ' — ' + _tokenData.error_description : '')
 +    };
 +  }
++  const raw = _tokenData && typeof _tokenData === 'object' ? _tokenData : {};
++  if (typeof raw.access_token !== 'string' || !raw.access_token.length) {
++    return {
++      status: 401,
++      body: 'Authorization failed (no access_token in GitHub response)'
++    };
++  }
++  const coercedExpires = typeof raw.expires_in === 'number' ? raw.expires_in : 60 * 60 * 24 * 365 * 5;
++  const coercedRefreshExpiry = typeof raw.refresh_token_expires_in === 'number' ? raw.refresh_token_expires_in : 60 * 60 * 24 * 365 * 5;
++  const normalizedToken = {
++    access_token: raw.access_token,
++    expires_in: coercedExpires,
++    refresh_token: typeof raw.refresh_token === 'string' && raw.refresh_token.length ? raw.refresh_token : '__keystatic_classic_oauth_no_refresh__',
++    refresh_token_expires_in: coercedRefreshExpiry,
++    scope: typeof raw.scope === 'string' ? raw.scope : '',
++    token_type: 'bearer'
++  };
    let tokenData;
    try {
-     tokenData = tokenDataResultType.create(_tokenData);
+-    tokenData = tokenDataResultType.create(_tokenData);
++    tokenData = tokenDataResultType.create(normalizedToken);
    } catch {
      return {
        status: 401,
@@ -54,3 +72,28 @@ index 2246207..827491f 100644
      };
    }
    const headers = await getTokenCookies(tokenData, config);
+@@ -332,9 +361,23 @@ async function refreshGitHubAuth(req, config) {
+     return;
+   }
+   const _tokenData = await tokenRes.json();
++  const raw = _tokenData && typeof _tokenData === 'object' ? _tokenData : {};
++  if (typeof raw.access_token !== 'string' || !raw.access_token.length) {
++    return;
++  }
++  const coercedExpires = typeof raw.expires_in === 'number' ? raw.expires_in : 60 * 60 * 24 * 365 * 5;
++  const coercedRefreshExpiry = typeof raw.refresh_token_expires_in === 'number' ? raw.refresh_token_expires_in : 60 * 60 * 24 * 365 * 5;
++  const normalizedToken = {
++    access_token: raw.access_token,
++    expires_in: coercedExpires,
++    refresh_token: typeof raw.refresh_token === 'string' && raw.refresh_token.length ? raw.refresh_token : '__keystatic_classic_oauth_no_refresh__',
++    refresh_token_expires_in: coercedRefreshExpiry,
++    scope: typeof raw.scope === 'string' ? raw.scope : '',
++    token_type: 'bearer'
++  };
+   let tokenData;
+   try {
+-    tokenData = tokenDataResultType.create(_tokenData);
++    tokenData = tokenDataResultType.create(normalizedToken);
+   } catch {
+     return;
+   }
