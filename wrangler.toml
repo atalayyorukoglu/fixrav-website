@@ -1,7 +1,12 @@
 name = "fixrav-website"
+# Keystatic (GitHub): Cloudflare Worker → Settings → Variables and Secrets (isimler birebir)
+#   KEYSTATIC_GITHUB_CLIENT_ID   (OAuth Client ID — genelde düz "Text" variable)
+#   KEYSTATIC_GITHUB_CLIENT_SECRET, KEYSTATIC_SECRET (Secret; secret ≥ 32 karakter)
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 main = "dist/_worker.js/index.js"
 
+# Astro Worker kodu env.ASSETS.fetch kullanır; binding adı açık olmalı (aksi halde logo.svg vb. patlar).
 [assets]
 directory = "dist"
+binding = "ASSETS"
