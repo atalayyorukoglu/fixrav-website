@@ -3,15 +3,14 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import keystatic from "@keystatic/astro";
-import node from "@astrojs/node";
+import cloudflare from "@astrojs/cloudflare";
 
 export default defineConfig({
   site: "https://fixrav.com",
   output: "server",
-  adapter: node({ mode: "standalone" }),
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  adapter: cloudflare({
+    platformProxy: { enabled: true },
+  }),
   integrations: [
     react(),
     sitemap({
@@ -27,6 +26,15 @@ export default defineConfig({
     locales: ["en", "tr"],
     routing: {
       prefixDefaultLocale: false,
+    },
+  },
+  vite: {
+    plugins: [tailwindcss()],
+    resolve: {
+      alias: {
+        // Cloudflare Workers ortamında Node.js crypto modülü
+        "node:crypto": "crypto",
+      },
     },
   },
 });

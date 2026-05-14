@@ -1,5 +1,5 @@
 ---
-import { team } from "@/config/team";
+import { getCollection } from "astro:content";
 import { t } from "@/i18n/utils";
 import { teamSection } from "@/i18n/team";
 import type { Locale } from "@/i18n/utils";
@@ -9,7 +9,8 @@ interface Props {
 }
 const { locale } = Astro.props;
 
-const sorted = [...team].sort((a, b) => a.order - b.order);
+const members = await getCollection("team");
+const sorted = members.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <section class="py-20 md:py-28">
@@ -24,31 +25,32 @@ const sorted = [...team].sort((a, b) => a.order - b.order);
     </div>
 
     <div class="flex flex-wrap justify-center gap-8 max-w-3xl mx-auto">
-      {sorted.map((member) => (
-        <div class="card card--elevated flex flex-col items-center text-center gap-4 w-full sm:w-72">
-          <div class="w-24 h-24 rounded-full bg-muted overflow-hidden ring-2 ring-border">
-            <img
-              src={member.photo}
-              alt={member.nameEn}
-              width="96"
-              height="96"
-              class="w-full h-full object-cover"
-              onerror="this.style.display='none'"
-            />
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-lg">{member.nameEn}</h3>
-            <p class="text-sm text-primary mt-0.5">
-              {locale === "tr" ? member.titleTr : member.titleEn}
+      {sorted.map((entry) => {
+        const member = entry.data;
+        return (
+          <div class="card card--elevated flex flex-col items-center text-center gap-4 w-full sm:w-72">
+            <div class="w-24 h-24 rounded-full bg-muted overflow-hidden ring-2 ring-border">
+              <img
+                src={member.photo ?? ""}
+                alt={member.name}
+                width="96"
+                height="96"
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'"
+              />
+            </div>
+            <div>
+              <h3 class="font-semibold text-lg">{member.name}</h3>
+              <p class="text-sm text-primary mt-0.5">
+                {locale === "tr" ? member.titleTr : member.titleEn}
+              </p>
+            </div>
+            <p class="text-sm text-foreground/60 leading-relaxed">
+              {locale === "tr" ? member.bioTr : member.bioEn}
             </p>
           </div>
-
-          <p class="text-sm text-foreground/60 leading-relaxed">
-            {locale === "tr" ? member.bioTr : member.bioEn}
-          </p>
-        </div>
-      ))}
+        );
+      })}
     </div>
   </div>
 </section>

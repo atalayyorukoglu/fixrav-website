@@ -1,10 +1,10 @@
 export const contact = {
-  phone:    "+90 XXX XXX XX XX",   // güncelle
+  phone:    "+90 532 656 60 07",   // güncelle
   email:    "hello@fixrav.com",
-  whatsapp: "90XXXXXXXXXX",         // güncelle, ülke kodu dahil, boşluksuz
+  whatsapp: "905326566007",         // güncelle, ülke kodu dahil, boşluksuz
   address: {
-    street:  "Istanbul, Turkey",
-    city:    "Istanbul",
+    street:  "Antalya, Turkey",
+    city:    "Antalya",
     country: "TR",
   },
 } as const;
