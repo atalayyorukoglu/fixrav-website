@@ -3,8 +3,8 @@ export const contact = {
   email:    "hello@fixrav.com",
   whatsapp: "905326566007",         // güncelle, ülke kodu dahil, boşluksuz
   address: {
-    street:  "Antalya, Turkey",
-    city:    "Antalya",
-    country: "TR",
+    street:  "London, England",
+    city:    "London",
+    country: "UK",
   },
 } as const;
