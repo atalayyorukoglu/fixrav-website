@@ -5,10 +5,12 @@ import sitemap from "@astrojs/sitemap";
 import keystatic from "@keystatic/astro";
 import node from "@astrojs/node";
 
+import cloudflare from "@astrojs/cloudflare";
+
 export default defineConfig({
   site: "https://fixrav.com",
   output: "server",
-  adapter: node({ mode: "standalone" }),
+  adapter: cloudflare(),
   vite: {
     plugins: [tailwindcss()],
   },
