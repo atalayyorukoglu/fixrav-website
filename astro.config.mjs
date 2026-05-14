@@ -13,6 +13,9 @@ const useReactDomServerEdge =
 export default defineConfig({
   site: "https://fixrav.com",
   output: "server",
+  // Cloudflare adapter yoksa production'da otomatik `SESSION` KV ister; binding yoksa SSR/API 500 döner.
+  // Bu sitede `Astro.session` kullanılmıyor — kalıcı session yerine no-op sürücü yeterli.
+  session: { driver: "null" },
   adapter: cloudflare({
     platformProxy: { enabled: true },
   }),
