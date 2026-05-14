@@ -2,7 +2,7 @@ import { config, fields, collection, singleton } from "@keystatic/core";
 
 export default config({
   storage:
-    process.env.NODE_ENV === "production"
+    import.meta.env.PROD
       ? { kind: "github", repo: { owner: "atalayyorukoglu", name: "fixrav-website" } }
       : { kind: "local" },
 
