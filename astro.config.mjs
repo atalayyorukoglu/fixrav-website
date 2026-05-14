@@ -32,6 +32,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
     resolve: {
       alias: {
+        // Cloudflare Workers: "worker" export react-dom/server.browser'a gider (MessageChannel yok).
+        // Edge/workerd sürümü Workers ile uyumludur.
+        "react-dom/server": "react-dom/server.edge",
         // Cloudflare Workers ortamında Node.js crypto modülü
         "node:crypto": "crypto",
       },
