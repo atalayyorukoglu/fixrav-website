@@ -1,3 +1,7 @@
 name = "fixrav-website"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
+main = "dist/_worker.js"
+
+[assets]
+directory = "dist"
